@@ -1,0 +1,13 @@
+{
+  "defaultview": "crudlist",
+  "view": {
+    "crudlist": {},
+    "crudcreate": {},
+    "crudedit": {},
+    "crudshow": {},
+    "crudduplicate": {},
+    "cruddelete": {},
+    "bulkedit": {},
+    "bulkdelete": {}
+  }
+}

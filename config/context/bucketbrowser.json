@@ -1,0 +1,13 @@
+{
+  "defaultview": "list",
+  "view": {
+    "list": {},
+    "fildedelete": {},
+    "fileupload": {},
+    "filedownload": {},
+    "delete": {},
+    "rename": {},
+    "move": {},
+    "copy": {}
+  }
+}

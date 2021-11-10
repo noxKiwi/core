@@ -1,0 +1,13 @@
+{
+  "SAVE_ERROR": "Korrigieren Sie bitte die markierten Felder",
+  "INCOMPLETE": "Füllen Sie bitte alle Felder aus",
+  "PLEASE_SELECT": "Bitte auswählen",
+  "REQUIREDFIELDS": "Mit (*) markierte Felder <span style=\"text-decoration:underline\">müssen</span> ausgefüllt werden.",
+  "DELETE_BTN_PROCEED": "Ja, löschen",
+  "DELETE_BTN_ABORT": "Nicht löschen",
+  "DELETE_TEXT_REALLY": "Soll das Objekt wirklich gelöscht werden?",
+  "DELETE_TEXT_INHERITANCE": "Abhängige Objekte werden ebenfalls gelöscht!",
+  "DELETE_HEADER_CONFIRM": "Löschen bestätigen",
+  "ENTRY_UPDATE": "Der Eintrag wurde erfolgreich aktualisiert",
+  "ENTRY_CREATE": "Der Eintrag wurde erfolgreich hinzugefügt"
+}

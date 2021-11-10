@@ -1,0 +1,7 @@
+{
+  "APP_NOT_ALLOWED_FOR_YOU": "Die angeforderte App ist nicht für Sie freigegeben",
+  "REQUESTED_USER_NOT_FOUND": "Die eingegebenen Benutzerdaten existieren nicht",
+  "USER_NOT_ACTIVATED": "Der angeforderte Benutzer ist gesperrt.<br />Wenden Sie sich bitte telefonisch an uns.",
+  "UNKNOWN_EXCEPTION": "Unbekannter Fehler bei der Anmeldung<br />Bitte wenden Sie sich telefonisch an uns.",
+  "AUTH_FAILED": "Diese App konnte sich nicht zum Loginsystem verbinden. Anmeldefehler"
+}

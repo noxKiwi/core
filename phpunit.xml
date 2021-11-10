@@ -1,0 +1,7 @@
+<phpunit bootstrap="C:\www\_src\bootstrap.php">
+    <testsuites>
+        <testsuite name="Validators">
+            <file>test/phpunit/ValidatorTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
