@@ -31,6 +31,7 @@ final class Application extends Singleton
 
     /**
      * I will construct the Application object.
+     * Exceptions that occur here will break the application.
      * @throws \noxkiwi\core\Exception
      * @throws \noxkiwi\core\Exception\ConfigurationException
      * @throws \noxkiwi\core\Exception\InvalidArgumentException
