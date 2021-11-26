@@ -8,6 +8,7 @@ use noxkiwi\core\ErrorHandler;
 use noxkiwi\core\Session;
 use function count;
 use function is_array;
+use function is_numeric;
 
 /**
  * I am

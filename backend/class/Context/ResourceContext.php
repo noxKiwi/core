@@ -7,6 +7,7 @@ use noxkiwi\core\Filesystem;
 use noxkiwi\core\Helper\MimeHelper;
 use noxkiwi\core\Helper\WebHelper;
 use noxkiwi\core\Path;
+use function explode;
 
 /**
  * I am the base Resource context class.

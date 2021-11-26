@@ -13,7 +13,11 @@ use noxkiwi\log\LogLevel;
 use noxkiwi\log\Traits\LogTrait;
 use noxkiwi\singleton\Singleton;
 use noxkiwi\translator\Traits\TranslatorTrait;
+use function class_exists;
 use function extension_loaded;
+use function method_exists;
+use function newrelic_name_transaction;
+use function ucfirst;
 use const E_ERROR;
 
 /**

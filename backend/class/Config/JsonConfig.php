@@ -9,6 +9,8 @@ use noxkiwi\core\Exception\InvalidJsonException;
 use noxkiwi\core\Filesystem;
 use noxkiwi\core\Helper\JsonHelper;
 use noxkiwi\core\Path;
+use function array_replace_recursive;
+use function compact;
 use function is_array;
 use const E_ERROR;
 

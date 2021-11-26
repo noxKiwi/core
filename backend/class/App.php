@@ -15,6 +15,8 @@ use noxkiwi\hook\Hook;
 use noxkiwi\log\Traits\LogTrait;
 use noxkiwi\singleton\Singleton;
 use ReflectionClass;
+use function explode;
+use function is_string;
 use function ucfirst;
 use const E_ERROR;
 

@@ -7,6 +7,8 @@ use noxkiwi\core\ErrorHandler;
 use noxkiwi\core\Gate;
 use noxkiwi\core\Request;
 use noxkiwi\core\Session;
+use function random_int;
+use function sprintf;
 
 /**
  * I am the Gate that checks for cross site request forgery.

@@ -6,6 +6,7 @@ use noxkiwi\core\Filesystem;
 use noxkiwi\core\Path;
 use noxkiwi\core\Response;
 use function in_array;
+use function strpos;
 use const E_NOTICE;
 
 /**

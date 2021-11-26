@@ -2,7 +2,12 @@
 namespace noxkiwi\core\Helper;
 
 use noxkiwi\core\Exception\CryptographyException;
+use function base64_decode;
+use function base64_encode;
 use function is_string;
+use function openssl_decrypt;
+use function openssl_encrypt;
+use function substr;
 use const E_WARNING;
 
 /**

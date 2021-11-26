@@ -2,6 +2,7 @@
 namespace noxkiwi\core;
 
 use noxkiwi\hook\Hook;
+use function chr;
 use function file_put_contents;
 
 /**

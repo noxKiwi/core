@@ -11,6 +11,7 @@ use noxkiwi\validator\Validator\Structure\Config\AppValidator;
 use noxkiwi\validator\Validator\Structure\Config\ContextValidator;
 use function is_array;
 use noxkiwi\singleton\Singleton;
+use const E_ERROR;
 
 /**
  * I am the "class" everyone wants to have but won't ever have.

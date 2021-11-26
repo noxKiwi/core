@@ -1,9 +1,11 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Traits;
 
+use function explode;
 use function in_array;
 use function is_array;
 use function is_object;
+use function str_contains;
 
 /**
  * I am the trait for the implementation if the DataContainerInterface.

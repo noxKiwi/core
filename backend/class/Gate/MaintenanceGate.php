@@ -5,6 +5,7 @@ use noxkiwi\core\Filesystem;
 use noxkiwi\core\Gate;
 use noxkiwi\core\Path;
 use noxkiwi\core\Request;
+use function defined;
 
 /**
  * I am the interface for the maintenance mode.

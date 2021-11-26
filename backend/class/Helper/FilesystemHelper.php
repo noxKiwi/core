@@ -3,6 +3,12 @@ namespace noxkiwi\core\Helper;
 
 use JetBrains\PhpStorm\ArrayShape;
 use function count;
+use function explode;
+use function implode;
+use function preg_match;
+use function preg_replace;
+use function str_replace;
+use function strtolower;
 
 /**
  * I am

@@ -1,6 +1,12 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Helper;
 
+use function end;
+use function explode;
+use function header;
+use function headers_sent;
+use function strtolower;
+
 /**
  * I am the MIME type helper class
  *

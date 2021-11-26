@@ -12,7 +12,9 @@ use function defined;
 use function func_get_args;
 use function in_array;
 use function is_array;
+use const CORE_ENVIRONMENT;
 use const E_ERROR;
+use const NK_ENVIRONMENT;
 
 /**
  * I am the Environment base.

@@ -3,6 +3,7 @@ namespace noxkiwi\core;
 
 use noxkiwi\core\Interfaces\SessionInterface;
 use noxkiwi\singleton\Singleton;
+use function session_id;
 
 /**
  * I am the base session class. All session objects must be my children.

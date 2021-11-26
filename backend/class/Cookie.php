@@ -3,6 +3,9 @@ namespace noxkiwi\core;
 
 use noxkiwi\core\Interfaces\CookieInterface;
 use noxkiwi\singleton\Singleton;
+use function hash;
+use function time;
+use function uniqid;
 
 /**
  * I am the basic cookie class

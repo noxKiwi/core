@@ -4,6 +4,7 @@ namespace noxkiwi\core\Traits;
 use Exception;
 use noxkiwi\core\ErrorHandler;
 use noxkiwi\translator\Translator;
+use function strtoupper;
 
 /**
  * I am the TranslationTrait.

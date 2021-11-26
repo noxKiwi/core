@@ -3,6 +3,8 @@ namespace noxkiwi\core\Gate;
 
 use noxkiwi\core\Gate;
 use noxkiwi\core\Helper\WebHelper;
+use function chr;
+use function file_put_contents;
 use function is_writable;
 use const FILE_APPEND;
 

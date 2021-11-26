@@ -8,7 +8,12 @@ use noxkiwi\core\Environment;
 use noxkiwi\core\Filesystem;
 use noxkiwi\core\Path;
 use noxkiwi\core\Request;
+use function header;
 use function in_array;
+use function ob_get_clean;
+use function ob_start;
+use function str_contains;
+use function strtolower;
 
 /**
  * I am
