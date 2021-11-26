@@ -2,6 +2,7 @@
 namespace noxkiwi\core\Gate;
 
 use noxkiwi\core\Gate;
+use const PHP_SAPI;
 
 /**
  * I am the CommandLineInterface Gate class.

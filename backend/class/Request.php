@@ -8,7 +8,10 @@ use noxkiwi\core\Request\CliRequest;
 use noxkiwi\core\Request\HttpRequest;
 use noxkiwi\core\Traits\DatacontainerTrait;
 use noxkiwi\core\Traits\LanguageImprovementTrait;
+use function date;
 use function json_encode;
+use function md5;
+use const PHP_SAPI;
 
 /**
  * I am the Core's Request representation.

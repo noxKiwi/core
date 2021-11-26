@@ -13,8 +13,18 @@ use noxkiwi\core\Helper\LinkHelper;
 use noxkiwi\core\Helper\WebHelper;
 use noxkiwi\core\Request;
 use noxkiwi\rewrite\Urlrewrite;
+use function compact;
+use function explode;
+use function file_get_contents;
 use function filter_input_array;
 use function is_array;
+use function json_decode;
+use function parse_str;
+use function str_contains;
+use function strncmp;
+use function strtok;
+use function strtolower;
+use function substr;
 use const INPUT_COOKIE;
 use const INPUT_GET;
 use const INPUT_POST;
@@ -51,7 +61,7 @@ class HttpRequest extends Request
         $this->add(filter_input_array(INPUT_POST) ?? []);
         $decoded = (array)(json_decode(file_get_contents('php://input') ?? '', true) ?? []);
         $this->add($decoded);
-        if (! is_array($decoded)) 
+        if (! is_array($decoded))
         {
             return;
         }

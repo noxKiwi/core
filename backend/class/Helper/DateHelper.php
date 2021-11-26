@@ -1,7 +1,12 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Helper;
 
+use function abs;
+use function date;
 use function in_array;
+use function round;
+use function strtotime;
+use function time;
 
 /**
  * I am

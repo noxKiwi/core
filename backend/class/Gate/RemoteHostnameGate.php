@@ -4,6 +4,7 @@ namespace noxkiwi\core\Gate;
 use JetBrains\PhpStorm\Pure;
 use noxkiwi\core\Gate;
 use noxkiwi\core\Helper\WebHelper;
+use function gethostbyname;
 
 /**
  * I am the Gate that checks the hostname that was given.

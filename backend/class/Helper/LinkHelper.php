@@ -5,9 +5,13 @@ use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use noxkiwi\core\Constants\Mvc;
 use noxkiwi\core\Response;
+use function header;
+use function http_build_query;
 use function is_array;
 use function is_string;
+use function str_replace;
 use function strlen;
+use function substr;
 
 /**
  * I am the link generator class.
