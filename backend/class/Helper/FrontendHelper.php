@@ -163,7 +163,6 @@ HTML;
             return '';
         }
         ob_start();
-        /** @noinspection PhpIncludeInspection */
         include $file;
 
         return ob_get_clean();

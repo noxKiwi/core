@@ -129,7 +129,7 @@ final class Filesystem extends Singleton implements FilesystemInterface
      */
     public function fileAvailable(string $file, bool $noCache = null): bool
     {
-        $noCache = $noCache ?? false;
+        $noCache ??= false;
         if (! $noCache && isset($this->fileCache[$file])) {
             return $this->fileCache[$file];
         }

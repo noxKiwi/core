@@ -128,7 +128,7 @@ final class SessionSession extends Session
      */
     public function exists(string $key): bool
     {
-        return array_key_exists($key, $_SESSION);
+        return array_key_exists($key, $_SESSION ?? []);
     }
 
     /**

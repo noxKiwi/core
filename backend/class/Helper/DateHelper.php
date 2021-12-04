@@ -171,7 +171,7 @@ abstract class DateHelper
         if (! $date) {
             return 'N/A';
         }
-        $withTime  = $withTime ?? true;
+        $withTime  ??= true;
         $timestamp = strtotime($date);
         $distance  = round(abs(time() - $timestamp) / 60);
         if ($distance <= 1) {
