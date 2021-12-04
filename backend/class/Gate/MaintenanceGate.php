@@ -66,7 +66,7 @@ final class MaintenanceGate extends Gate
         }
         $documentRoot = Request::getInstance()->get('DOCUMENT_ROOT');
         if (! empty($documentRoot)) {
-            return $documentRoot . self::MAINTENANCE_FILE;
+            return $documentRoot . '/' . self::MAINTENANCE_FILE;
         }
 
         return self::MAINTENANCE_FILE;
