@@ -39,8 +39,6 @@ abstract class Request implements RequestInterface
      * If the single instance does not exist, create it.
      * Return the single instance then.
      *
-     * @noinspection PhpMissingParentCallCommonInspection
-     *
      * @return \noxkiwi\core\Request
      */
     public static function getInstance(): static

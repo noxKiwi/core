@@ -41,8 +41,6 @@ abstract class Response implements ResponseInterface
      * If the single instance does not exist, create it.
      * Return the single instance then.
      *
-     * @noinspection PhpMissingParentCallCommonInspection
-     *
      * @return \noxkiwi\core\Response
      */
     public static function getInstance(): static
