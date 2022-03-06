@@ -95,25 +95,30 @@ abstract class ErrorHandler
      */
     private static function output(\Exception $exception): void
     {
-        if (error_reporting() === 0) {
-            return;
-        }
-        $file      = basename($exception->getFile());
-        $file      = Path::LOG_DIR . "exception_{$file}_{$exception->getLine()}.html";
-        $errorPage = FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/errorinfo.php'), $exception);
-        file_put_contents($file, $errorPage);
-        if (defined('NK_ERROR_OUTPUT') && NK_ERROR_OUTPUT !== true) {
-            return;
-        }
-        if (! headers_sent()) {
-            header(HttpResponse::HEADER_ERROR);
-        }
-        if (Environment::runs(Environment::PRODUCTION)) {
-            echo FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/error.php'));
+        try {
+            if (error_reporting() === 0) {
+                return;
+            }
+            $file      = basename($exception->getFile());
+            $file      = Path::LOG_DIR . "exception_{$file}_{$exception->getLine()}.html";
+            $errorPage = FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/errorinfo.php'), $exception);
+            file_put_contents($file, $errorPage);
+            if (defined('NK_ERROR_OUTPUT') && NK_ERROR_OUTPUT !== true) {
+                return;
+            }
+            if (! headers_sent()) {
+                header(HttpResponse::HEADER_ERROR);
+            }
+            if (Environment::runs(Environment::PRODUCTION)) {
+                echo FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/error.php'));
+                exit(CliResponse::EXITCODE_ERROR);
+            }
+            echo $errorPage;
             exit(CliResponse::EXITCODE_ERROR);
+        } catch (\Exception $error) {
+            var_dump($error);
+            die();
         }
-        echo $errorPage;
-        exit(CliResponse::EXITCODE_ERROR);
     }
 
     /**
