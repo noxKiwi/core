@@ -27,7 +27,7 @@ use function substr;
 abstract class LinkHelper
 {
     /** @var bool Encrypt links to obfuscate the underlying mvc? */
-    public static bool $encryptLinks = false;
+    public static bool $encryptLinks = true;
     /** @var string The password */
     public static string $secret = 'k26p555ug9d72j028f2dprknf';
 
