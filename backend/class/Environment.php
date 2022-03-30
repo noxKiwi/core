@@ -58,7 +58,7 @@ final class Environment extends Singleton implements DatacontainerInterface
         parent::initialize();
         $data = JsonHelper::decodeFileToArray(self::getPath());
         if (empty($data)) {
-            throw new ConfigurationException('ENVIRONMENT_INVALID', E_ERROR);
+            throw new ConfigurationException('ENVIRONMENT_INVALID', E_ERROR, ['path'=>self::getPath()]);
         }
         $this->add($data);
         self::$loaded = true;
