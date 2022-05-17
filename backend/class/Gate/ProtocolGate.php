@@ -37,6 +37,9 @@ final class ProtocolGate extends Gate
      */
     #[Pure] public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
         foreach (self::$allowedRanges as $allowedRange) {
             if (WebHelper::isCidr($allowedRange) === true) {
                 return true;

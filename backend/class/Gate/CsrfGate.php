@@ -3,9 +3,7 @@ namespace noxkiwi\core\Gate;
 
 use Exception;
 use noxkiwi\core\Cookie;
-use noxkiwi\core\ErrorHandler;
 use noxkiwi\core\Gate;
-use noxkiwi\core\Request;
 use noxkiwi\core\Session;
 use function random_int;
 use function sprintf;
@@ -23,31 +21,36 @@ use function sprintf;
 final class CsrfGate extends Gate
 {
     private const CSRF_TOKEN = 'csrf';
+    private Session $session;
+    private Cookie  $cookie;
+
+    /**
+     * @throws \noxkiwi\singleton\Exception\SingletonException
+     */
+    protected function __construct()
+    {
+        parent::__construct();
+        $this->session = Session::getInstance();
+        $this->cookie  = Cookie::getInstance();
+    }
 
     /**
      * @inheritDoc
-     * @throws \noxkiwi\singleton\Exception\SingletonException
      * @return bool
      */
     public function isOpen(): bool
     {
-        $fromGet = Request::getInstance()->get(self::CSRF_TOKEN, '');
-        if (self::checkCsrf($fromGet)) {
-            return true;
-        }
-        $fromPost = Request::getInstance()->get(self::CSRF_TOKEN, '');
-        if (self::checkCsrf($fromPost)) {
-            return true;
-        }
-        $fromCookie = Cookie::getInstance()->get(self::CSRF_TOKEN, '');
-        if (self::checkCsrf($fromCookie)) {
-            return true;
+        if (! parent::isOpen()) {
+            return false;
         }
         try {
-            Session::getInstance()->destroy();
-            Cookie::getInstance()->end();
-        } catch (Exception $exception) {
-            ErrorHandler::handleException($exception);
+            if ($this->checkCsrf()) {
+                return true;
+            }
+        } catch (Exception) {
+            // IGNORED
+        } finally {
+            $this->createToken();
         }
 
         return false;
@@ -56,20 +59,14 @@ final class CsrfGate extends Gate
     /**
      * I will validate the CSRF.
      *
-     * @param string $csrfToken
-     *
      * @return bool
      */
-    private static function checkCsrf(string $csrfToken): bool
+    private function checkCsrf(): bool
     {
         try {
-            if (Session::getInstance()->get(self::CSRF_TOKEN, '_') === $csrfToken) {
-                self::setCsrfToken();
-
-                return true;
-            }
-        } catch (Exception $exception) {
-            ErrorHandler::handleException($exception);
+            return $this->session->get(self::CSRF_TOKEN, '') === $this->cookie->get(self::CSRF_TOKEN, '');
+        } catch (Exception) {
+            //IGNORED
         }
 
         return false;
@@ -78,19 +75,19 @@ final class CsrfGate extends Gate
     /**
      * I will solely set the new CSRF Token.
      */
-    private static function setCsrfToken(): void
+    public function createToken(): void
     {
         try {
-            $csrfToken = self::generateCsrf();
-            Cookie::getInstance()->set(self::CSRF_TOKEN, $csrfToken);
-            Session::getInstance()->set(self::CSRF_TOKEN, $csrfToken);
-        } catch (Exception $exception) {
-            ErrorHandler::handleException($exception);
+            $newToken = CsrfGate::generateCsrf();
+            $this->cookie->set(self::CSRF_TOKEN, $newToken);
+            $this->session->set(self::CSRF_TOKEN, $newToken);
+        } catch (Exception) {
+            //IGNORED
         }
     }
 
     /**
-     * Function generateRandomUUID2
+     * Function generateCsrf
      *
      * @throws \Exception
      * @return string

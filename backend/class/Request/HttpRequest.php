@@ -61,8 +61,7 @@ class HttpRequest extends Request
         $this->add(filter_input_array(INPUT_POST) ?? []);
         $decoded = (array)(json_decode(file_get_contents('php://input') ?? '', true) ?? []);
         $this->add($decoded);
-        if (! is_array($decoded))
-        {
+        if (empty($decoded)) {
             return;
         }
         $this->add($data);
@@ -77,20 +76,26 @@ class HttpRequest extends Request
     {
         parent::build();
         Cookie::getInstance()->start();
-        $uri         = substr($_SERVER['REQUEST_URI'], 1);
-        $requestData = $this->getRedirection($uri);
-        if (! empty($uri) && ! empty($requestData)) {
+        if (! empty($requestData)) {
             foreach ($requestData as $key => $value) {
                 $this->set($key, $value);
             }
         } else {
-            if (empty($_GET) && ! empty($uri)) {
-                $noParams = explode('?', $_SERVER['REQUEST_URI'])[0];
-                try {
-                    $params = LinkHelper::decryptLink($noParams);
-                    parse_str($params, $_GET);
-                } catch (Exception) {
-                    exit(WebHelper::HTTP_BAD_REQUEST);
+            $environment = Environment::getInstance();
+            // Encrypted Urls?
+            if ($environment->get('url>encrypt', false) === true) {
+                    if (! empty($_GET) && $environment->get('url>forceencrypt', false) === true) {
+                    LinkHelper::forward('/');
+                }
+                $uri = substr($_SERVER['REQUEST_URI'], 1);
+                if (! empty($uri)) {
+                    $noParams = explode('?', $_SERVER['REQUEST_URI'])[0];
+                    try {
+                        $params = LinkHelper::decryptLink($noParams);
+                        parse_str($params, $_GET);
+                    } catch (Exception) {
+                        exit(WebHelper::HTTP_BAD_REQUEST);
+                    }
                 }
             }
             static::getInstance()->add($_GET);

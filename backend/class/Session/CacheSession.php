@@ -102,7 +102,6 @@ final class CacheSession extends Session
             }
             $this->put($data);
             Cache::getInstance()->set(self::getCachegroup(), 'SESSION', $this->get(), $this->timeout);
-            $this->get();
 
             return;
         } catch (Exception $exception) {
@@ -160,6 +159,7 @@ final class CacheSession extends Session
 
     /**
      * @inheritDoc
+     * @noinspection PhpMixedReturnTypeCanBeReducedInspection
      */
     public function get(string $key = null, mixed $default = null): mixed
     {

@@ -38,6 +38,7 @@ use const E_ERROR;
 abstract class ErrorHandler
 {
     private const SURROUND_LINES = 10;
+    public static int $errorsReported = 0;
 
     /**
      * I will handle the given $error as info element on a new Exception that will be handled right after.
@@ -67,6 +68,7 @@ abstract class ErrorHandler
      */
     public static function handleException(\Exception $exception, int $errorLevel = E_ERROR): void
     {
+        self::$errorsReported++;
         if (error_reporting() === 0) {
             return;
         }

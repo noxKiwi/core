@@ -38,6 +38,9 @@ final class CidrGate extends Gate
      */
     #[Pure] public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
         foreach ($this->allowedRanges as $allowedRange) {
             if (WebHelper::isCidr($allowedRange) === true) {
                 return true;

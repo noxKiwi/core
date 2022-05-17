@@ -2,6 +2,7 @@
 namespace noxkiwi\core;
 
 use noxkiwi\core\Interfaces\SessionInterface;
+use noxkiwi\core\Traits\HookTrait;
 use noxkiwi\singleton\Singleton;
 use function session_id;
 
@@ -17,8 +18,12 @@ use function session_id;
  */
 abstract class Session extends Singleton implements SessionInterface
 {
-    protected const USE_DRIVER = true;
-    public const    SESSIONKEY = 'phpsessid';
+    use HookTrait;
+
+    protected const USE_DRIVER     = true;
+    public const    SESSIONKEY     = 'phpsessid';
+    public const    HOOK_DESTROYED = 'session_destroyed';
+    public const    HOOK_STARTED   = 'session_started';
 
     /**
      * I will construct the Session adding the given $data into the Session.

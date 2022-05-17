@@ -10,7 +10,8 @@ use function compact;
 use function count;
 
 /**
- * I am
+ * I am...
+ * @deprecated
  * Class StackOf
  * @package noxkiwi\core
  */
