@@ -11,6 +11,7 @@ use noxkiwi\validator\Validator\Structure\Config\AppValidator;
 use noxkiwi\validator\Validator\Structure\Config\ContextValidator;
 use function is_array;
 use noxkiwi\singleton\Singleton;
+use const E_ERROR;
 
 /**
  * I am the "class" everyone wants to have but won't ever have.
@@ -31,6 +32,7 @@ final class Application extends Singleton
 
     /**
      * I will construct the Application object.
+     * Exceptions that occur here will break the application.
      * @throws \noxkiwi\core\Exception
      * @throws \noxkiwi\core\Exception\ConfigurationException
      * @throws \noxkiwi\core\Exception\InvalidArgumentException

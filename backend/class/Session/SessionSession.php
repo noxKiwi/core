@@ -12,13 +12,13 @@ use function session_start;
 use const E_ERROR;
 
 /**
- * I am
+ * I am the regular, PHP-based session.
  *
- * @package      noxkiwi\core
+ * @package      noxkiwi\core\Session
  * @author       Jan Nox <jan.nox@pm.me>
  * @license      http://www.noxkiwi.de/license
- * @copyright    2016-2018 noxkiwi
- * @version      1.0.0
+ * @copyright    2016 - 2022 noxkiwi
+ * @version      1.0.1
  * @link         http://www.noxkiwi.de/
  */
 final class SessionSession extends Session
@@ -45,27 +45,27 @@ final class SessionSession extends Session
     /**
      * Creates the instance and saves the data object in it
      *
-     * @author       Jan Nox <jan.nox@pm.me>
-     *
      * @param array $data
      *
-     * @return       Session
+     * @return       \noxkiwi\core\Session
      */
     public function start(array $data): Session
     {
         $_SESSION = $data;
+        $this->fireHook(self::HOOK_DESTROYED);
 
         return $this;
     }
 
     /**
      * Ends the Session the current user is in
-     * @author       Jan Nox <jan.nox@pm.me>
      */
     public function destroy(): void
     {
         session_destroy();
         unset($_SESSION);
+        session_start();
+        $this->fireHook(self::HOOK_DESTROYED);
     }
 
     /**
@@ -73,7 +73,6 @@ final class SessionSession extends Session
      * <br />If identified successfully, I will return TRUE
      * <br />In any other case I will return FALSE
      *
-     * @author       Jan Nox <jan.nox@pm.me>
      * @return       bool
      */
     #[Pure] public function identify(): bool
@@ -128,7 +127,7 @@ final class SessionSession extends Session
      */
     public function exists(string $key): bool
     {
-        return array_key_exists($key, $_SESSION);
+        return array_key_exists($key, $_SESSION ?? []);
     }
 
     /**

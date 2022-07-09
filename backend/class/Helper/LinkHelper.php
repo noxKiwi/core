@@ -5,9 +5,13 @@ use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use noxkiwi\core\Constants\Mvc;
 use noxkiwi\core\Response;
+use function header;
+use function http_build_query;
 use function is_array;
 use function is_string;
+use function str_replace;
 use function strlen;
+use function substr;
 
 /**
  * I am the link generator class.
@@ -23,7 +27,7 @@ use function strlen;
 abstract class LinkHelper
 {
     /** @var bool Encrypt links to obfuscate the underlying mvc? */
-    public static bool $encryptLinks = false;
+    public static bool $encryptLinks = true;
     /** @var string The password */
     public static string $secret = 'k26p555ug9d72j028f2dprknf';
 
@@ -79,7 +83,7 @@ abstract class LinkHelper
         $original   = [
             Mvc::CONTEXT => $response->get(Mvc::CONTEXT),
             Mvc::VIEW    => $response->get(Mvc::VIEW),
-            Mvc::ACTION  => $response->get(Mvc::ACTION),
+            Mvc::ACTION  => null,
         ];
         $parameters = ArrayHelper::arrayMergeRecursive($original, $parameters);
 
@@ -110,8 +114,12 @@ abstract class LinkHelper
         if (! static::$encryptLinks) {
             return $decrypted;
         }
-
-        return CryptographyHelper::encrypt($decrypted, static::$secret, static::$secret);
+        try {
+            return CryptographyHelper::encrypt($decrypted, static::$secret, static::$secret);
+        } catch (Exception) {
+            // IGNORED
+            return '';
+        }
     }
 
     /**

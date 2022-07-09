@@ -82,7 +82,7 @@ final class CookieCookie extends Cookie
         }
         setcookie($key, $data, $this->getExpires(), '/', $_SERVER['HTTP_HOST'], false, true);
         $_COOKIE[$key] = $data;
-        if ($this->get($key) === null) {
+        if ($this->get($key) !== $data) {
             throw new CookieException('EXCEPTION_COOKIES_NOT_WRITABLE', E_NOTICE);
         }
     }
@@ -109,6 +109,5 @@ final class CookieCookie extends Cookie
      */
     public function put(array $data): void
     {
-
     }
 }

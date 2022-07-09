@@ -5,9 +5,13 @@ use JetBrains\PhpStorm\Pure;
 use noxkiwi\core\Observer\ErrorstackObserver;
 use noxkiwi\observing\Traits\ObservableTrait;
 use noxkiwi\stack\StackOf;
+use function call_user_func;
+use function compact;
+use function count;
 
 /**
- * I am
+ * I am...
+ * @deprecated
  * Class StackOf
  * @package noxkiwi\core
  */

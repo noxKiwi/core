@@ -2,6 +2,9 @@
 namespace noxkiwi\core\Helper;
 
 use JetBrains\PhpStorm\Pure;
+use function explode;
+use function getenv;
+use function ip2long;
 
 /**
  * I am

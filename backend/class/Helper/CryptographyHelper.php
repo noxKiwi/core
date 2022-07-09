@@ -2,17 +2,25 @@
 namespace noxkiwi\core\Helper;
 
 use noxkiwi\core\Exception\CryptographyException;
+use noxkiwi\core\Exception\SystemComponentException;
+use function base64_decode;
+use function base64_encode;
+use function extension_loaded;
 use function is_string;
+use function openssl_decrypt;
+use function openssl_encrypt;
+use function substr;
+use const E_ERROR;
 use const E_WARNING;
 
 /**
- * I am
+ * I am the helper for cryptographic operations.
  *
  * @package      noxkiwi\core
  * @author       Jan Nox <jan.nox@pm.me>
  * @license      https://nox.kiwi/license
- * @copyright    2016 - 2018 noxkiwi
- * @version      1.0.0
+ * @copyright    2016 - 2022 noxkiwi
+ * @version      1.0.1
  * @link         https://nox.kiwi/
  */
 abstract class CryptographyHelper
@@ -24,10 +32,15 @@ abstract class CryptographyHelper
      * @param string $key
      * @param string $iv
      *
+     * @throws \noxkiwi\core\Exception\SystemComponentException
      * @return string
      */
     public static function encrypt(string $decrypted, string $key, string $iv): string
     {
+        if (! extension_loaded('openssl')) {
+            throw new SystemComponentException('openSSL unavailable', E_ERROR);
+        }
+
         return base64_encode(openssl_encrypt($decrypted, 'AES-256-CBC', $key, 0, substr($iv, 0, 16)));
     }
 
@@ -39,10 +52,14 @@ abstract class CryptographyHelper
      * @param string $iv
      *
      * @throws \noxkiwi\core\Exception\CryptographyException
+     * @throws \noxkiwi\core\Exception\SystemComponentException
      * @return string
      */
     public static function decrypt(string $encrypted, string $key, string $iv): string
     {
+        if (! extension_loaded('openssl')) {
+            throw new SystemComponentException('openSSL unavailable', E_ERROR);
+        }
         $encrypted = base64_decode($encrypted);
         if (! is_string($encrypted)) {
             throw new CryptographyException('EXCEPTION_DECRYPT_BASEDECODEERROR', E_WARNING, $encrypted);

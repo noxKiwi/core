@@ -4,10 +4,26 @@ namespace noxkiwi\core;
 use noxkiwi\core\Interfaces\FilesystemInterface;
 use noxkiwi\log\Traits\LogTrait;
 use noxkiwi\singleton\Singleton;
+use function array_diff;
+use function array_pop;
+use function compact;
+use function copy;
 use function dirname;
+use function explode;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
 use function is_dir;
+use function is_file;
 use function is_readable;
+use function is_writable;
 use function is_writeable;
+use function mkdir;
+use function rename;
+use function rmdir;
+use function scandir;
+use function unlink;
+use const SCANDIR_SORT_NONE;
 
 /**
  * I am the Filesystem handler class.
@@ -113,7 +129,7 @@ final class Filesystem extends Singleton implements FilesystemInterface
      */
     public function fileAvailable(string $file, bool $noCache = null): bool
     {
-        $noCache = $noCache ?? false;
+        $noCache ??= false;
         if (! $noCache && isset($this->fileCache[$file])) {
             return $this->fileCache[$file];
         }

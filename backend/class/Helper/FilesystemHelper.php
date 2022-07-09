@@ -1,8 +1,11 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Helper;
 
-use JetBrains\PhpStorm\ArrayShape;
 use function count;
+use function explode;
+use function implode;
+use function preg_replace;
+use function str_replace;
 
 /**
  * I am
@@ -81,8 +84,8 @@ abstract class FilesystemHelper
         $filename = preg_replace('/[çς©с]/u', 'c', $filename);
         $filename = preg_replace('/[ÇС]/u', 'C', $filename);
         $filename = preg_replace('/[δ]/u', 'd', $filename);
-        $filename = preg_replace('/[éèêëέëèεе℮ёєэЭ]/u', 'e', $filename);
-        $filename = preg_replace('/[ÉÈÊË€ξЄ€Е∑]/u', 'E', $filename);
+        $filename = preg_replace('/[éèêëέεе℮ёєэЭ]/u', 'e', $filename);
+        $filename = preg_replace('/[ÉÈÊË€ξЄЕ∑]/u', 'E', $filename);
         $filename = preg_replace('/[₣]/u', 'F', $filename);
         $filename = preg_replace('/[НнЊњ]/u', 'H', $filename);
         $filename = preg_replace('/[ђћЋ]/u', 'h', $filename);
@@ -93,10 +96,10 @@ abstract class FilesystemHelper
         $filename = preg_replace('/[ќк]/u', 'k', $filename);
         $filename = preg_replace('/[ℓ∟]/u', 'l', $filename);
         $filename = preg_replace('/[Мм]/u', 'M', $filename);
-        $filename = preg_replace('/[ñηήηπⁿ]/u', 'n', $filename);
+        $filename = preg_replace('/[ñηήπⁿ]/u', 'n', $filename);
         $filename = preg_replace('/[Ñ∏пПИЙийΝЛ]/u', 'N', $filename);
         $filename = preg_replace('/[óòôõºöοФσόо]/u', 'o', $filename);
-        $filename = preg_replace('/[ÓÒÔÕÖθΩθОΩ]/u', 'O', $filename);
+        $filename = preg_replace('/[ÓÒÔÕÖθΩОΩ]/u', 'O', $filename);
         $filename = preg_replace('/[ρφрРф]/u', 'p', $filename);
         $filename = preg_replace('/[®яЯ]/u', 'R', $filename);
         $filename = preg_replace('/[ГЃгѓ]/u', 'r', $filename);
@@ -113,11 +116,11 @@ abstract class FilesystemHelper
         $filename = preg_replace('/[ỲΫ¥]/u', 'Y', $filename);
         $filename = preg_replace('/[ỳγўЎУуч]/u', 'y', $filename);
         $filename = preg_replace('/[ζ]/u', 'Z', $filename);
-        $filename = preg_replace('/[‚‚]/u', ',', $filename);
+        $filename = preg_replace('/[‚]/u', ',', $filename);
         $filename = preg_replace('/[`‛′’‘]/u', '\'', $filename);
         $filename = preg_replace('/[″“”«»„]/u', '\'', $filename);
-        $filename = preg_replace('/[—–―−–‾⌐─↔→←]/u', '-', $filename);
-        $filename = preg_replace('/[  ]/u', ' ', $filename);
+        $filename = preg_replace('/[—–―−‾⌐─↔→←]/u', '-', $filename);
+        $filename = preg_replace('/[ ]/u', ' ', $filename);
         $filename = (string)str_replace(['…', '≠', '≤', '≥'], ['...', '!=', '<=', '>='], $filename);
         $filename = preg_replace('/[‗≈≡]/u', '=', $filename);
         $filename = (string)str_replace(['ыЫ', '℅', '₧', '™', '№', 'Ч', '‰'], ['bl', 'c/o', 'Pts', 'tm', 'No', '4', '%'], $filename);
@@ -134,76 +137,5 @@ abstract class FilesystemHelper
         $filename = preg_replace('/[∞∩∫⌂⌠⌡]/u', '', $filename);
 
         return (string)str_replace([',', '_', '/', '\\/', ' '], '', $filename);
-    }
-
-    /**
-     * I will return file information for the given $fileName.
-     *
-     * @param        $filename
-     *
-     * @return array
-     */
-    #[ArrayShape(['icon_class' => 'string', 'extension' => 'mixed|string', 'category' => 'string'])] public static function getFileInfo($filename): array
-    {
-        preg_match('/\.[^\.]+$', $filename, $ext);
-        $return = [
-            'icon_class' => '',
-            'extension'  => $ext[0] ?? '',
-            'category'   => ''
-        ];
-        switch (strtolower($return['extension'])) {
-            case '.pdf':
-            case '.doc':
-            case '.rtf':
-            case '.txt':
-            case '.docx':
-            case '.xls':
-            case '.xlsx':
-                $return['icon_class'] = 'file-text';
-                $return['category']   = 'document';
-                break;
-            case '.png':
-            case '.jpg':
-            case '.jpeg':
-            case '.gif':
-            case '.bmp':
-            case '.psd':
-            case '.tif':
-            case '.tiff':
-                $return['icon_class'] = 'picture';
-                $return['category']   = 'image';
-                break;
-            case '.mp3':
-            case '.wav':
-            case '.wma':
-            case '.m4a':
-            case '.m3u':
-                $return['icon_class'] = 'music';
-                $return['category']   = 'audio';
-                break;
-            case '.3g2':
-            case '.3gp':
-            case '.asf':
-            case '.asx':
-            case '.avi':
-            case '.flv':
-            case '.m4v':
-            case '.mov':
-            case '.mp4':
-            case '.mpg':
-            case '.srt':
-            case '.swf':
-            case '.vob':
-            case '.wmv':
-                $return['icon_class'] = 'film';
-                $return['category']   = 'video';
-                break;
-            default:
-                $return['icon_class'] = 'file-binary';
-                $return['category']   = 'other';
-                break;
-        }
-
-        return $return;
     }
 }

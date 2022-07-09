@@ -8,6 +8,7 @@ use noxkiwi\core\ErrorHandler;
 use noxkiwi\core\Session;
 use function count;
 use function is_array;
+use function is_numeric;
 
 /**
  * I am
@@ -101,7 +102,6 @@ final class CacheSession extends Session
             }
             $this->put($data);
             Cache::getInstance()->set(self::getCachegroup(), 'SESSION', $this->get(), $this->timeout);
-            $this->get();
 
             return;
         } catch (Exception $exception) {
@@ -159,6 +159,7 @@ final class CacheSession extends Session
 
     /**
      * @inheritDoc
+     * @noinspection PhpMixedReturnTypeCanBeReducedInspection
      */
     public function get(string $key = null, mixed $default = null): mixed
     {

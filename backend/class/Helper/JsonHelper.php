@@ -6,7 +6,17 @@ use JsonException;
 use noxkiwi\core\Exception\FilesystemException;
 use noxkiwi\core\Exception\InvalidJsonException;
 use noxkiwi\core\Filesystem;
+use function file_get_contents;
+use function json_decode;
+use function json_encode;
+use function json_last_error;
 use const E_WARNING;
+use const JSON_ERROR_CTRL_CHAR;
+use const JSON_ERROR_DEPTH;
+use const JSON_ERROR_NONE;
+use const JSON_ERROR_STATE_MISMATCH;
+use const JSON_ERROR_SYNTAX;
+use const JSON_ERROR_UTF8;
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
 

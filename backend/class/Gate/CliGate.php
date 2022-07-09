@@ -1,7 +1,9 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Gate;
 
+use JetBrains\PhpStorm\Pure;
 use noxkiwi\core\Gate;
+use const PHP_SAPI;
 
 /**
  * I am the CommandLineInterface Gate class.
@@ -18,8 +20,12 @@ final class CliGate extends Gate
     /**
      * @inheritDoc
      */
-    public function isOpen(): bool
+    #[Pure] public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
+
         return PHP_SAPI === 'cli';
     }
 }

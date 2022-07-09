@@ -39,6 +39,10 @@ final class IpGate extends Gate
      */
     #[Pure] public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
+
         return in_array(WebHelper::getClientIp(), $this->allowedHosts, true);
     }
 }

@@ -1,7 +1,12 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Helper;
 
+use function abs;
+use function date;
 use function in_array;
+use function round;
+use function strtotime;
+use function time;
 
 /**
  * I am
@@ -166,7 +171,7 @@ abstract class DateHelper
         if (! $date) {
             return 'N/A';
         }
-        $withTime  = $withTime ?? true;
+        $withTime  ??= true;
         $timestamp = strtotime($date);
         $distance  = round(abs(time() - $timestamp) / 60);
         if ($distance <= 1) {
@@ -182,7 +187,7 @@ abstract class DateHelper
         } elseif ($distance < 14568) {
             $return = date('l, F d, Y', $timestamp) . ($withTime ? ' at ' . date('g:i A', $timestamp) : '');
         } else {
-            $return = date('F d ', $timestamp) . date('Y') !== date('Y', $timestamp) ? ' ' . date('Y', $timestamp) : '' . ($withTime ? ' at ' . date('g:i A', $timestamp) : '');
+            $return = date('F d ', $timestamp) . date('Y') !== date('Y', $timestamp) ? ' ' . date('Y', $timestamp) : ($withTime ? ' at ' . date('g:i A', $timestamp) : '');
         }
 
         return $return;

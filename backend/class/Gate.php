@@ -29,6 +29,14 @@ abstract class Gate extends Singleton implements GateInterface
     /**
      * @inheritDoc
      */
+    public function isOpen(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function open(): void
     {
     }

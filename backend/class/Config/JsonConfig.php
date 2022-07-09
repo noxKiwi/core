@@ -9,7 +9,8 @@ use noxkiwi\core\Exception\InvalidJsonException;
 use noxkiwi\core\Filesystem;
 use noxkiwi\core\Helper\JsonHelper;
 use noxkiwi\core\Path;
-use function is_array;
+use function array_replace_recursive;
+use function compact;
 use const E_ERROR;
 
 /**
@@ -42,11 +43,11 @@ final class JsonConfig extends Config
         if (empty($file)) {
             throw new InvalidArgumentException('FILE_IS_EMPTY', E_ERROR);
         }
-        $config          = [];
+        $config = [];
         if (! $inherit) {
             $this->file = (string)$this->getFullPath($file);
             $config     = $this->decodeFile($this->file);
-            if (! is_array($config)) {
+            if (empty($config)) {
                 throw new ConfigurationException('CONTENT_IS_NOT_AN_ARRAY', E_ERROR, compact('file', 'config'));
             }
             $this->put($config);
@@ -86,12 +87,12 @@ final class JsonConfig extends Config
      *
      * @param string $fullPath
      *
-     * @return       array|null
+     * @return       array
      */
-    protected function decodeFile(string $fullPath): ?array
+    protected function decodeFile(string $fullPath): array
     {
         try {
-            return JsonHelper::decodeFileToArray($fullPath);
+            return (array)JsonHelper::decodeFileToArray($fullPath);
         } catch (InvalidJsonException $exception) {
             ErrorHandler::handleException($exception);
 

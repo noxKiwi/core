@@ -13,8 +13,18 @@ use noxkiwi\core\Helper\LinkHelper;
 use noxkiwi\core\Helper\WebHelper;
 use noxkiwi\core\Request;
 use noxkiwi\rewrite\Urlrewrite;
+use function compact;
+use function explode;
+use function file_get_contents;
 use function filter_input_array;
 use function is_array;
+use function json_decode;
+use function parse_str;
+use function str_contains;
+use function strncmp;
+use function strtok;
+use function strtolower;
+use function substr;
 use const INPUT_COOKIE;
 use const INPUT_GET;
 use const INPUT_POST;
@@ -51,8 +61,7 @@ class HttpRequest extends Request
         $this->add(filter_input_array(INPUT_POST) ?? []);
         $decoded = (array)(json_decode(file_get_contents('php://input') ?? '', true) ?? []);
         $this->add($decoded);
-        if (! is_array($decoded)) 
-        {
+        if (empty($decoded)) {
             return;
         }
         $this->add($data);
@@ -67,14 +76,14 @@ class HttpRequest extends Request
     {
         parent::build();
         Cookie::getInstance()->start();
-        $uri         = substr($_SERVER['REQUEST_URI'], 1);
-        $requestData = $this->getRedirection($uri);
-        if (! empty($uri) && ! empty($requestData)) {
-            foreach ($requestData as $key => $value) {
-                $this->set($key, $value);
+        $environment = Environment::getInstance();
+        // Encrypted Urls?
+        if ($environment->get('url>encrypt', false) === true) {
+                if (! empty($_GET) && $environment->get('url>forceencrypt', false) === true) {
+                LinkHelper::forward('/');
             }
-        } else {
-            if (empty($_GET) && ! empty($uri)) {
+            $uri = substr($_SERVER['REQUEST_URI'], 1);
+            if (! empty($uri)) {
                 $noParams = explode('?', $_SERVER['REQUEST_URI'])[0];
                 try {
                     $params = LinkHelper::decryptLink($noParams);
@@ -83,14 +92,14 @@ class HttpRequest extends Request
                     exit(WebHelper::HTTP_BAD_REQUEST);
                 }
             }
-            static::getInstance()->add($_GET);
-            $defaultContext = Application::getInstance()->get('defaultcontext');
-            $context        = static::getInstance()->get(Mvc::CONTEXT, $defaultContext);
-            static::getInstance()->set(Mvc::CONTEXT, $context);
-            $defaultView = Application::getInstance()->get('context>' . $context . '>defaultview');
-            $view        = static::getInstance()->get(Mvc::VIEW, $defaultView);
-            static::getInstance()->set(Mvc::VIEW, $view);
         }
+        static::getInstance()->add($_GET);
+        $defaultContext = Application::getInstance()->get('defaultcontext');
+        $context        = static::getInstance()->get(Mvc::CONTEXT, $defaultContext);
+        static::getInstance()->set(Mvc::CONTEXT, $context);
+        $defaultView = Application::getInstance()->get('context>' . $context . '>defaultview');
+        $view        = static::getInstance()->get(Mvc::VIEW, $defaultView);
+        static::getInstance()->set(Mvc::VIEW, $view);
 
         return $this;
     }

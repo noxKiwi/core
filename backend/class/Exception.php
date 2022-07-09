@@ -2,7 +2,6 @@
 namespace noxkiwi\core;
 
 use noxkiwi\hook\Hook;
-use function file_put_contents;
 
 /**
  * I am the Core project's base exception.
@@ -33,7 +32,6 @@ abstract class Exception extends \Exception
      */
     final public function __construct(string $code, int $level, $info = null)
     {
-        file_put_contents('/var/www/_log/exceptions.log', chr(10) . $code, 8);
         parent::__construct($code, $level);
         $this->message = $code;
         $this->code    = $code;

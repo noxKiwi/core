@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core;
 
-use JetBrains\PhpStorm\Pure;
 use noxkiwi\core\Constants\Mvc;
 use noxkiwi\core\Exception\ContextException;
+use noxkiwi\core\Exception\InvalidArgumentException;
 use noxkiwi\core\Exception\SystemComponentException;
 use noxkiwi\core\Helper\FrontendHelper;
 use noxkiwi\core\Interfaces\ContextInterface;
@@ -13,8 +13,16 @@ use noxkiwi\log\LogLevel;
 use noxkiwi\log\Traits\LogTrait;
 use noxkiwi\singleton\Singleton;
 use noxkiwi\translator\Traits\TranslatorTrait;
+use function class_exists;
 use function extension_loaded;
+use function is_subclass_of;
+use function method_exists;
+use function newrelic_name_transaction;
+use function strtoupper;
+use function ucfirst;
 use const E_ERROR;
+use const E_USER_NOTICE;
+use const E_WARNING;
 
 /**
  * I am the base Context class.
@@ -73,12 +81,17 @@ abstract class Context extends Singleton implements ContextInterface
      * @param string $contextName
      *
      * @throws \noxkiwi\core\Exception\SystemComponentException The desired context is not available.
+     * @throws \noxkiwi\core\Exception\SystemComponentException The desired class is not a descendant of the Context class.
+     * @throws \noxkiwi\singleton\Exception\SingletonException  Obviously, if singleton fails.
      * @return \noxkiwi\core\Context
      */
     public static function get(string $contextName): Context
     {
         if (! class_exists($contextName)) {
             throw new SystemComponentException('CONTEXT_NOT_AVAILABLE', E_ERROR, $contextName);
+        }
+        if (! is_subclass_of($contextName, self::class)) {
+            throw new SystemComponentException('CLASS_NOT_A_CONTEXT', E_ERROR, $contextName);
         }
 
         return $contextName::getInstance();
@@ -102,6 +115,7 @@ abstract class Context extends Singleton implements ContextInterface
     public function dispatch(Request $request): void
     {
         try {
+            $this->validate($request);
             $response = $this->backendController($request);
         } catch (\Exception $exception) {
             ErrorHandler::handleException($exception);
@@ -116,13 +130,54 @@ abstract class Context extends Singleton implements ContextInterface
     }
 
     /**
+     * I will validate the given Request against the configured parameter structure of the action and view.
+     *
+     * @param \noxkiwi\core\Request $request
+     *
+     * @throws \noxkiwi\core\Exception\InvalidArgumentException
+     * @return void
+     */
+    protected function validate(Request $request): void
+    {
+        $actionConst = static::class . '::' . strtoupper("REQUEST_{$request->get(Mvc::ACTION)}_ACTION");
+        $errors      = [];
+        if (defined($actionConst)) {
+            $design = constant($actionConst);
+            foreach ($design as $name => $validator) {
+                $val   = $validator::get($validator);
+                $error = $val->validate($request->get($name));
+                if (empty($error)) {
+                    continue;
+                }
+                $errors[$name] = $error;
+            }
+        }
+        $viewConst = static::class . '::' . strtoupper("REQUEST_{$request->get(Mvc::VIEW)}_VIEW");
+        if (defined($viewConst)) {
+            $design = constant($viewConst);
+            foreach ($design as $name => $validator) {
+                $val   = $validator::get($validator);
+                $error = $val->validate($request->get($name));
+                if (empty($error)) {
+                    continue;
+                }
+                $errors[$name] = $error;
+            }
+        }
+        if (empty($errors)) {
+            return;
+        }
+        throw new InvalidArgumentException('REQUEST_PARAMETERS_VIOLATED', E_WARNING, $errors);
+    }
+
+    /**
      * I will perform any actions that belong to the backend of the application.
      *
      * @param \noxkiwi\core\Request $request
      *
      * @return \noxkiwi\core\Response
      */
-    final protected function backendController(Request $request): Response
+    protected function backendController(Request $request): Response
     {
         $this->doAction($request);
         $this->doView($request);
@@ -141,11 +196,15 @@ abstract class Context extends Singleton implements ContextInterface
         if ($action === null) {
             return;
         }
-        $action = static::makeActionMethod($action);
+        $action = 'action' . ucfirst($action);
         if (! method_exists($this, $action)) {
             return;
         }
-        $this->$action();
+        try {
+            $this->$action();
+        } catch (Exception $exception) {
+            ErrorHandler::handleException($exception, E_USER_NOTICE);
+        }
     }
 
     /**
@@ -155,22 +214,16 @@ abstract class Context extends Singleton implements ContextInterface
      */
     final protected function doView(Request $request): void
     {
-        $method = static::getViewName($request->get(Mvc::VIEW, ''));
-        if (method_exists($this, $method)) {
-            $this->{$method}();
+        $view   = $request->get(Mvc::VIEW, '');
+        $method = Mvc::VIEW . ucfirst($view);
+        if (! method_exists($this, $method)) {
+            return;
         }
-    }
-
-    /**
-     * I will solely return the given $view's method name.
-     *
-     * @param string $view
-     *
-     * @return string
-     */
-    #[Pure] final protected static function getViewName(string $view): string
-    {
-        return Mvc::VIEW . ucfirst($view);
+        try {
+            $this->$method();
+        } catch (Exception $exception) {
+            ErrorHandler::handleException($exception, E_USER_NOTICE);
+        }
     }
 
     /**
@@ -211,17 +264,5 @@ abstract class Context extends Singleton implements ContextInterface
     final protected function doOutput(Response $response): void
     {
         $response->pushOutput();
-    }
-
-    /**
-     * I will solely return the given $action's method name.
-     *
-     * @param string $action
-     *
-     * @return string
-     */
-    #[Pure] private static function makeActionMethod(string $action): string
-    {
-        return 'action' . ucfirst($action);
     }
 }

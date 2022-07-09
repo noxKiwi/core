@@ -5,6 +5,7 @@ use noxkiwi\core\Filesystem;
 use noxkiwi\core\Gate;
 use noxkiwi\core\Path;
 use noxkiwi\core\Request;
+use function defined;
 
 /**
  * I am the interface for the maintenance mode.
@@ -27,6 +28,10 @@ final class MaintenanceGate extends Gate
      */
     public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
+
         return ! Filesystem::getInstance()->fileAvailable(self::getPath());
     }
 
@@ -65,7 +70,7 @@ final class MaintenanceGate extends Gate
         }
         $documentRoot = Request::getInstance()->get('DOCUMENT_ROOT');
         if (! empty($documentRoot)) {
-            return $documentRoot . self::MAINTENANCE_FILE;
+            return $documentRoot . '/' . self::MAINTENANCE_FILE;
         }
 
         return self::MAINTENANCE_FILE;

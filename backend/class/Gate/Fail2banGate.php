@@ -1,8 +1,11 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Gate;
 
+use JetBrains\PhpStorm\Pure;
 use noxkiwi\core\Gate;
 use noxkiwi\core\Helper\WebHelper;
+use function chr;
+use function file_put_contents;
 use function is_writable;
 use const FILE_APPEND;
 
@@ -55,8 +58,12 @@ final class Fail2banGate extends Gate
     /**
      * @inheritDoc
      */
-    public function isOpen(): bool
+    #[Pure] public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
+
         return true;
     }
 

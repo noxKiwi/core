@@ -7,8 +7,21 @@ use noxkiwi\core\Helper\FrontendHelper;
 use noxkiwi\core\Helper\WebHelper;
 use noxkiwi\core\Response\CliResponse;
 use noxkiwi\core\Response\HttpResponse;
+use function basename;
+use function chr;
+use function count;
+use function defined;
 use function error_reporting;
+use function explode;
+use function file_get_contents;
+use function file_put_contents;
+use function header;
+use function headers_sent;
 use function htmlspecialchars;
+use function max;
+use function min;
+use function print_r;
+use function uniqid;
 use function var_dump;
 use const E_ERROR;
 
@@ -25,6 +38,7 @@ use const E_ERROR;
 abstract class ErrorHandler
 {
     private const SURROUND_LINES = 10;
+    public static int $errorsReported = 0;
 
     /**
      * I will handle the given $error as info element on a new Exception that will be handled right after.
@@ -54,6 +68,7 @@ abstract class ErrorHandler
      */
     public static function handleException(\Exception $exception, int $errorLevel = E_ERROR): void
     {
+        self::$errorsReported++;
         if (error_reporting() === 0) {
             return;
         }
@@ -82,25 +97,30 @@ abstract class ErrorHandler
      */
     private static function output(\Exception $exception): void
     {
-        if (error_reporting() === 0) {
-            return;
-        }
-        $file      = basename($exception->getFile());
-        $file      = Path::LOG_DIR . "exception_{$file}_{$exception->getLine()}.html";
-        $errorPage = FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/errorinfo.php'), $exception);
-        file_put_contents($file, $errorPage);
-        if (defined('NK_ERROR_OUTPUT') && NK_ERROR_OUTPUT !== true) {
-            return;
-        }
-        if (! headers_sent()) {
-            header(HttpResponse::HEADER_ERROR);
-        }
-        if (Environment::runs(Environment::PRODUCTION)) {
-            echo FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/error.php'));
+        try {
+            if (error_reporting() === 0) {
+                return;
+            }
+            $file      = basename($exception->getFile());
+            $file      = Path::LOG_DIR . "exception_{$file}_{$exception->getLine()}.html";
+            $errorPage = FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/errorinfo.php'), $exception);
+            file_put_contents($file, $errorPage);
+            if (defined('NK_ERROR_OUTPUT') && NK_ERROR_OUTPUT !== true) {
+                return;
+            }
+            if (! headers_sent()) {
+                header(HttpResponse::HEADER_ERROR);
+            }
+            if (Environment::runs(Environment::PRODUCTION)) {
+                echo FrontendHelper::parseFile(Path::getInheritedPath('frontend/page/error.php'));
+                exit(CliResponse::EXITCODE_ERROR);
+            }
+            echo $errorPage;
             exit(CliResponse::EXITCODE_ERROR);
+        } catch (\Exception $error) {
+            var_dump($error);
+            die();
         }
-        echo $errorPage;
-        exit(CliResponse::EXITCODE_ERROR);
     }
 
     /**
