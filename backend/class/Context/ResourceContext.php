@@ -25,7 +25,7 @@ abstract class ResourceContext extends Context
      * I will output the content of the requested file, and then I will exit.
      * @throws \noxkiwi\singleton\Exception\SingletonException
      */
-    #[NoReturn] protected function viewFile(): void
+    #[NoReturn] final protected function viewFile(): void
     {
         [$type, $file] = explode(
             '/',

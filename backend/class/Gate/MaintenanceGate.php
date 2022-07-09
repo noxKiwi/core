@@ -28,6 +28,10 @@ final class MaintenanceGate extends Gate
      */
     public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
+
         return ! Filesystem::getInstance()->fileAvailable(self::getPath());
     }
 

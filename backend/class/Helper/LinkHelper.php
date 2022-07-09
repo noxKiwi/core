@@ -83,7 +83,7 @@ abstract class LinkHelper
         $original   = [
             Mvc::CONTEXT => $response->get(Mvc::CONTEXT),
             Mvc::VIEW    => $response->get(Mvc::VIEW),
-            Mvc::ACTION  => $response->get(Mvc::ACTION),
+            Mvc::ACTION  => null,
         ];
         $parameters = ArrayHelper::arrayMergeRecursive($original, $parameters);
 
@@ -114,8 +114,12 @@ abstract class LinkHelper
         if (! static::$encryptLinks) {
             return $decrypted;
         }
-
-        return CryptographyHelper::encrypt($decrypted, static::$secret, static::$secret);
+        try {
+            return CryptographyHelper::encrypt($decrypted, static::$secret, static::$secret);
+        } catch (Exception) {
+            // IGNORED
+            return '';
+        }
     }
 
     /**

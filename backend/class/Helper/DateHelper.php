@@ -187,7 +187,7 @@ abstract class DateHelper
         } elseif ($distance < 14568) {
             $return = date('l, F d, Y', $timestamp) . ($withTime ? ' at ' . date('g:i A', $timestamp) : '');
         } else {
-            $return = date('F d ', $timestamp) . date('Y') !== date('Y', $timestamp) ? ' ' . date('Y', $timestamp) : '' . ($withTime ? ' at ' . date('g:i A', $timestamp) : '');
+            $return = date('F d ', $timestamp) . date('Y') !== date('Y', $timestamp) ? ' ' . date('Y', $timestamp) : ($withTime ? ' at ' . date('g:i A', $timestamp) : '');
         }
 
         return $return;

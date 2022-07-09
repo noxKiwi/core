@@ -1,6 +1,7 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Gate;
 
+use JetBrains\PhpStorm\Pure;
 use noxkiwi\core\Gate;
 
 /**
@@ -18,8 +19,9 @@ final class ClosedGate extends Gate
 {
     /**
      * @inheritDoc
+     * @noinspection PhpMissingParentCallCommonInspection
      */
-    public function isOpen(): bool
+    #[Pure] public function isOpen(): bool
     {
         return false;
     }

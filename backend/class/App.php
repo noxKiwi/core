@@ -10,31 +10,34 @@ use noxkiwi\core\Helper\LinkHelper;
 use noxkiwi\core\Helper\WebHelper;
 use noxkiwi\core\Interfaces\AppInterface;
 use noxkiwi\core\Response\HttpResponse;
+use noxkiwi\core\Traits\HookTrait;
 use noxkiwi\core\Traits\LanguageImprovementTrait;
 use noxkiwi\hook\Hook;
 use noxkiwi\log\Traits\LogTrait;
 use noxkiwi\singleton\Singleton;
 use ReflectionClass;
 use function explode;
+use function headers_sent;
 use function is_string;
 use function ucfirst;
 use const E_ERROR;
 
 /**
- * I am the "class" everyone wants to have but won't ever have.
- *   - pun intended
+ * I am the main class that processes Requests.
+ * I will >run and do everything in that call.
  *
  * @package      noxkiwi\core
  * @author       Jan Nox <jan.nox@pm.me>
  * @license      https://nox.kiwi/license
- * @copyright    2016 - 2021 noxkiwi
- * @version      1.0.15
+ * @copyright    2016 - 2022 noxkiwi
+ * @version      1.0.16
  * @link         https://nox.kiwi/
  */
 abstract class App extends Singleton implements AppInterface
 {
     use LogTrait;
     use LanguageImprovementTrait;
+    use HookTrait;
 
     /** @var string I am the called App's vendor. */
     private static string $vendor;
@@ -169,5 +172,26 @@ abstract class App extends Singleton implements AppInterface
         }
 
         return Application::getInstance()->get('defaulttemplate', 'blank');
+    }
+
+    /**
+     * I will solely put the output buffer into a variable and check if the ErrorHandler
+     * had to deal with Exceptions or Errors during the request.
+     * If any occured, I'll send 500, if not, I'll send 200.
+     */
+    #[NoReturn] public function __destruct()
+    {
+        if (headers_sent()) {
+            return;
+        }
+        $output = ob_get_clean();
+        if (! ErrorHandler::$errorsReported) {
+            header('HTTP/1.1 200 Okay');
+            echo $output;
+            exit(WebHelper::HTTP_OKAY);
+        }
+        header('HTTP/1.1 500 Server Error');
+        echo $output;
+        exit(WebHelper::HTTP_SERVER_ERROR);
     }
 }

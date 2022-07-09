@@ -1,11 +1,24 @@
 <?php declare(strict_types = 1);
 
 namespace noxkiwi\core;
-use noxkiwi\core\Gate\MaintenanceGate;
-use function file_get_contents;
 
-$entered = date('Y-m-d H:i:s', filemtime(MaintenanceGate::getPath()));
-$reason = file_get_contents(MaintenanceGate::getPath());
+use DateTime;
+use noxkiwi\core\Gate\MaintenanceGate;
+use function file_exists;
+use function file_get_contents;
+use function is_readable;
+
+//
+$begin  = 'some time ago';
+$reason = 'reasons';
+
+$path = MaintenanceGate::getPath();
+if (file_exists($path) && is_readable($path)) {
+    $dateTime = new DateTime();
+    $dateTime->setTimestamp(filemtime($path));
+    $begin  = $dateTime->format('c');
+    $reason = file_get_contents($path);
+}
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -25,10 +38,10 @@ $reason = file_get_contents(MaintenanceGate::getPath());
 <div class="text-center">
     <h1 class="fa fa-cogs size-80 theme-color hidden-xs"></h1>
     <h2><strong>💀</strong></h2>
-    <p>This application went into <strong>Maintenance Mode</strong> at <?= $entered ?> because of <i><?= $reason ?></i></p>
+    <p>This application went into <strong>Maintenance Mode</strong> at <?= $begin ?> because of <em><?= $reason ?></em></p>
     <img src="/asset/lib/maintenance/death.jpg" loop="false" width="33%">
     <br/>
-    <small><a href="https://www.vikrammadan.com/">&quot;<i>Kicking The Bucket</i>&quot; by Vikram Madan</a></small>
+    <small><a href="https://www.vikrammadan.com/">&quot;<em>Kicking The Bucket</em>&quot; by Vikram Madan</a></small>
 </div>
 </body>
 </html>

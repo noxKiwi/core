@@ -2,8 +2,6 @@
 namespace noxkiwi\core;
 
 use noxkiwi\hook\Hook;
-use function chr;
-use function file_put_contents;
 
 /**
  * I am the Core project's base exception.

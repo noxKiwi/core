@@ -38,6 +38,9 @@ final class RemoteHostnameGate extends Gate
      */
     #[Pure] public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
         foreach (self::$remoteHostnames as $remoteHostname) {
             $ipAddress = gethostbyname($remoteHostname);
             if (WebHelper::getClientIp() === $ipAddress) {

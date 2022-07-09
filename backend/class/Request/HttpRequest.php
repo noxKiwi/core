@@ -61,8 +61,7 @@ class HttpRequest extends Request
         $this->add(filter_input_array(INPUT_POST) ?? []);
         $decoded = (array)(json_decode(file_get_contents('php://input') ?? '', true) ?? []);
         $this->add($decoded);
-        if (! is_array($decoded))
-        {
+        if (empty($decoded)) {
             return;
         }
         $this->add($data);
@@ -77,14 +76,14 @@ class HttpRequest extends Request
     {
         parent::build();
         Cookie::getInstance()->start();
-        $uri         = substr($_SERVER['REQUEST_URI'], 1);
-        $requestData = $this->getRedirection($uri);
-        if (! empty($uri) && ! empty($requestData)) {
-            foreach ($requestData as $key => $value) {
-                $this->set($key, $value);
+        $environment = Environment::getInstance();
+        // Encrypted Urls?
+        if ($environment->get('url>encrypt', false) === true) {
+                if (! empty($_GET) && $environment->get('url>forceencrypt', false) === true) {
+                LinkHelper::forward('/');
             }
-        } else {
-            if (empty($_GET) && ! empty($uri)) {
+            $uri = substr($_SERVER['REQUEST_URI'], 1);
+            if (! empty($uri)) {
                 $noParams = explode('?', $_SERVER['REQUEST_URI'])[0];
                 try {
                     $params = LinkHelper::decryptLink($noParams);
@@ -93,14 +92,14 @@ class HttpRequest extends Request
                     exit(WebHelper::HTTP_BAD_REQUEST);
                 }
             }
-            static::getInstance()->add($_GET);
-            $defaultContext = Application::getInstance()->get('defaultcontext');
-            $context        = static::getInstance()->get(Mvc::CONTEXT, $defaultContext);
-            static::getInstance()->set(Mvc::CONTEXT, $context);
-            $defaultView = Application::getInstance()->get('context>' . $context . '>defaultview');
-            $view        = static::getInstance()->get(Mvc::VIEW, $defaultView);
-            static::getInstance()->set(Mvc::VIEW, $view);
         }
+        static::getInstance()->add($_GET);
+        $defaultContext = Application::getInstance()->get('defaultcontext');
+        $context        = static::getInstance()->get(Mvc::CONTEXT, $defaultContext);
+        static::getInstance()->set(Mvc::CONTEXT, $context);
+        $defaultView = Application::getInstance()->get('context>' . $context . '>defaultview');
+        $view        = static::getInstance()->get(Mvc::VIEW, $defaultView);
+        static::getInstance()->set(Mvc::VIEW, $view);
 
         return $this;
     }

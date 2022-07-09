@@ -1,6 +1,7 @@
 <?php declare(strict_types = 1);
 namespace noxkiwi\core\Gate;
 
+use JetBrains\PhpStorm\Pure;
 use noxkiwi\core\Gate;
 use function in_array;
 
@@ -35,8 +36,12 @@ final class HostnameGate extends Gate
     /**
      * @inheritDoc
      */
-    public function isOpen(): bool
+    #[Pure] public function isOpen(): bool
     {
+        if (! parent::isOpen()) {
+            return false;
+        }
+
         return in_array($_SERVER['HTTP_HOST'], $this->hostNames, true);
     }
 }
