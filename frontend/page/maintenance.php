@@ -38,10 +38,10 @@ if (file_exists($path) && is_readable($path)) {
 <div class="text-center">
     <h1 class="fa fa-cogs size-80 theme-color hidden-xs"></h1>
     <h2><strong>💀</strong></h2>
-    <p>This application went into <strong>Maintenance Mode</strong> at <?= $begin ?> because of <i><?= $reason ?></i></p>
+    <p>This application went into <strong>Maintenance Mode</strong> at <?= $begin ?> because of <em><?= $reason ?></em></p>
     <img src="/asset/lib/maintenance/death.jpg" loop="false" width="33%">
     <br/>
-    <small><a href="https://www.vikrammadan.com/">&quot;<i>Kicking The Bucket</i>&quot; by Vikram Madan</a></small>
+    <small><a href="https://www.vikrammadan.com/">&quot;<em>Kicking The Bucket</em>&quot; by Vikram Madan</a></small>
 </div>
 </body>
 </html>
